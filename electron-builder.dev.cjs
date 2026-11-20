@@ -2,21 +2,21 @@ const packageJson = require('./package.json')
 
 module.exports = {
   ...packageJson.build,
-  appId: 'io.dsh.desktop.dev',
-  productName: 'DSH Desktop Dev',
+  appId: 'cc.3cool.desktop.dev',
+  productName: '3COOL Dev',
   directories: {
     ...packageJson.build.directories,
     output: 'dist-dev'
   },
   extraMetadata: {
-    name: 'dsh-desktop-dev',
-    productName: 'DSH Desktop Dev',
+    name: '3cool-desktop-dev',
+    productName: '3COOL Dev',
     dshDesktopChannel: 'development'
   },
-  artifactName: 'dsh-desktop-dev-${os}-${arch}.${ext}',
+  artifactName: '3cool-dev-${os}-${arch}.${ext}',
   nsis: {
     ...packageJson.build.nsis,
-    artifactName: 'dsh-desktop-dev-windows-${arch}-setup.${ext}'
+    artifactName: '3cool-dev-windows-${arch}-setup.${ext}'
   },
   publish: null
 }

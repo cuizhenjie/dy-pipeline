@@ -116,23 +116,21 @@ describe('DSH Desktop client slot occupants', () => {
     const sidebarName = registrations.find(
       ({ config }) => config.name === 'sidebar.brand.name'
     )!.component({}) as { type: unknown; props: Record<string, unknown> }
-    expect(sidebarName.type).toBe(BrandWordmark)
-    expect(sidebarName.props.includeMark).toBe(false)
+    expect(sidebarName.type).toBe('span')
+    expect(sidebarName.props.children).toContain('3COOL')
 
     const sidebarMark = registrations.find(
       ({ config }) => config.name === 'sidebar.brand.mark'
     )!.component({ size: 24 }) as { type: unknown; props: Record<string, unknown> }
-    expect(sidebarMark.type).toBe('svg')
-    expect(sidebarMark.props.height).toBe(17)
-    const [markPath] = sidebarMark.props.children as Array<{ type: unknown; props: Record<string, unknown> }>
-    if (!markPath) throw new Error('Expected the sidebar brand SVG path')
-    expect(markPath.type).toBe('path')
-    expect(markPath.props.fill).toBe('currentColor')
+    expect(sidebarMark.type).toBe('img')
+    expect(sidebarMark.props.src).toBe('dsh-desktop://desktop/mark-3cool.png')
+    expect(sidebarMark.props.height).toBe(18)
 
     const heroMark = registrations.find(
       ({ config }) => config.name === 'conversation.hero.brand.mark'
     )!.component({ size: 48 }) as { type: unknown; props: Record<string, unknown> }
-    expect(heroMark.type).toBe(FishLogo)
-    expect(heroMark.props.size).toBe(48)
+    expect(heroMark.type).toBe('img')
+    expect(heroMark.props.src).toBe('dsh-desktop://desktop/mark-3cool.png')
+    expect(heroMark.props.width).toBe(48)
   })
 })

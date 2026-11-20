@@ -47,6 +47,8 @@ import {
   resolveShellEnvironment,
   prewarmShellEnvironment
 } from './runtime/harness-runtime'
+import { load3coolRuntimeEnv, seed3coolHome } from './state/3cool-runtime'
+import { PRODUCT_NAME, PRODUCT_USER_DATA_DIR } from '../shared/product-brand'
 import { launchDisclaimedUtilityProcess } from './runtime/disclaimed-utility-process'
 import {
   installProfileDependenciesWithDsh,
@@ -614,17 +616,13 @@ function applyWindowChromeTheme(window: BrowserWindow, isDark: boolean): void {
 
 function configureAppIdentity(): void {
   if (developmentBuild) {
-    app.setName('DSH Desktop Dev')
+    app.setName(`${PRODUCT_NAME} Dev`)
     app.setPath('userData', join(app.getPath('appData'), developmentConfig.profile))
     return
   }
 
-  app.setName('DSH Desktop')
-  // Keep the historical lowercase directory stable across product-name and
-  // branding changes. Harness stores workspaces, sessions, credentials, and
-  // custom presets below userData, so deriving this path from app.getName()
-  // would make an ordinary upgrade look like a fresh installation.
-  app.setPath('userData', join(app.getPath('appData'), 'dsh-desktop'))
+  app.setName(PRODUCT_NAME)
+  app.setPath('userData', join(app.getPath('appData'), PRODUCT_USER_DATA_DIR))
 }
 
 async function syncNativeTheme(window: BrowserWindow): Promise<void> {
@@ -1106,10 +1104,10 @@ function ensureTray(): void {
 
   const locale = harnessLocale()
   tray = new Tray(desktopIconPath())
-  tray.setToolTip('DSH Desktop')
+  tray.setToolTip(PRODUCT_NAME)
   tray.setContextMenu(
     Menu.buildFromTemplate([
-      { label: locale === 'zh' ? '显示 DSH Desktop' : 'Show DSH Desktop', click: restoreMainWindow },
+      { label: locale === 'zh' ? `显示 ${PRODUCT_NAME}` : `Show ${PRODUCT_NAME}`, click: restoreMainWindow },
       { type: 'separator' },
       { label: locale === 'zh' ? '退出' : 'Exit', click: () => app.quit() }
     ])
@@ -2059,8 +2057,8 @@ async function showAbout(window: BrowserWindow): Promise<void> {
   const checkForUpdatesLabel = locale === 'zh' ? '检查更新' : 'Check for Updates'
   const result = await dialog.showMessageBox(window, {
     type: 'info',
-    title: 'DSH Desktop',
-    message: locale === 'zh' ? '关于 DSH Desktop' : 'About DSH Desktop',
+    title: PRODUCT_NAME,
+    message: locale === 'zh' ? `关于 ${PRODUCT_NAME}` : `About ${PRODUCT_NAME}`,
     detail: aboutDetail(
       app.getVersion(),
       bundledHarnessVersion(bundledRuntimeRoot()),
@@ -2220,7 +2218,7 @@ function reportNativeRecoveryFailure(failure: unknown): void {
   console.error('[desktop] native recovery failed', failureMessage)
   if (quitting || gpuFallbackRelaunching) return
   const locale = harnessLocale()
-  dialog.showErrorBox('DSH Desktop', applicationText(locale, 'windowRecovery.heading') + '\n\n' +
+  dialog.showErrorBox(PRODUCT_NAME, applicationText(locale, 'windowRecovery.heading') + '\n\n' +
     applicationText(locale, 'windowRecovery.description'))
 }
 
@@ -3325,7 +3323,7 @@ function installMenu(): void {
           label: app.name,
           submenu: [
             {
-              label: isChinese ? '关于 DSH Desktop' : 'About DSH Desktop',
+              label: isChinese ? `关于 ${PRODUCT_NAME}` : `About ${PRODUCT_NAME}`,
               click: () => {
                 if (mainWindow && !mainWindow.isDestroyed()) {
                   void showAbout(mainWindow).catch(showUnexpectedError)
@@ -3541,6 +3539,7 @@ async function bootstrap(): Promise<void> {
     pnpmEntryPath: bundledPnpmEntryPath(),
     pnpmRunnerPath: bundledPnpmRunnerPath(),
     hideConsoleBootstrapPath: hideConsoleBootstrapPath(),
+    extraEnvironment: load3coolRuntimeEnv(desktopResourcePath('3cool-runtime.env'), process.env),
     // Keep the Harness origin stable across launches. These ports are separate
     // from the production/development mobile bridge ports (43127/43128).
     preferredPort: developmentConfig.harnessPort,
@@ -4009,6 +4008,10 @@ if (isDaemonLaunch(process.env, process.platform)) {
   app.exit(0)
 } else {
   configureAppIdentity()
+  seed3coolHome(
+    join(app.getPath('userData'), 'harness'),
+    load3coolRuntimeEnv(desktopResourcePath('3cool-runtime.env'), process.env)
+  )
   configureApplicationLocale()
   configureGpuFallback()
   installGpuFallbackWatch()

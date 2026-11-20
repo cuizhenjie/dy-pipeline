@@ -43,6 +43,8 @@ export interface HarnessRuntimeOptions {
   pnpmRunnerPath?: string
   /** Windows console-hide bootstrap passed to the Harness as an absolute path. */
   hideConsoleBootstrapPath?: string
+  /** Extra variables merged into the Harness spawn environment after shell capture. */
+  extraEnvironment?: NodeJS.ProcessEnv
   onChanged(snapshot: RuntimeSnapshot): void
 }
 
@@ -523,7 +525,10 @@ export class HarnessRuntime {
       return
     }
     await mkdir(this.options.dshHome, { recursive: true })
-    const shellEnvironment = await prewarmShellEnvironment()
+    const shellEnvironment = {
+      ...await prewarmShellEnvironment(),
+      ...this.options.extraEnvironment
+    }
     let configurationProblems
     try {
       configurationProblems = await inspectStartupConfiguration(this.options.dshHome, profile, shellEnvironment, launchDirectory)
@@ -612,7 +617,7 @@ export class HarnessRuntime {
           launchDirectory,
           this.options.dshHome,
           process.platform,
-          shellEnvironment,
+          { ...shellEnvironment, ...this.options.extraEnvironment },
           profile,
           {
             entryPath: this.options.pnpmEntryPath,

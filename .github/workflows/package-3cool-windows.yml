@@ -1,0 +1,44 @@
+name: Package 3COOL Windows
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - 3cool
+      - main
+
+permissions:
+  contents: read
+  actions: write
+
+jobs:
+  windows:
+    name: Build unsigned 3COOL Windows installer
+    runs-on: windows-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install dependencies
+        run: npm ci --prefer-offline --no-audit --no-fund
+      - name: Write MiniMax CN runtime seed
+        env:
+          MINIMAX_CN_API_KEY: ${{ secrets.MINIMAX_CN_API_KEY }}
+        run: node scripts/write-3cool-runtime-seed.mjs
+      - name: Package Windows x64
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+        run: npm run package:win:3cool
+      - uses: actions/upload-artifact@v4
+        with:
+          name: 3cool-windows-x64
+          path: |
+            dist-3cool/*.exe
+            dist-3cool/*.yml
+          if-no-files-found: error
+          retention-days: 14

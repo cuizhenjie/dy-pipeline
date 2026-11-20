@@ -22,6 +22,12 @@
 - id: ui-settings-account
   disabled: true
 
+# 3COOL ships MiniMax CN as the default model once MINIMAX_CN_API_KEY is present.
+- id: agent-default-model
+  config:
+    provider: minimax-cn
+    model: MiniMax-M3
+
 # Desktop keeps the existing web Profile; upstream only enables this for a
 # Profile named desktop. Enable the shipped browser in the Desktop overlay.
 - id: ui-sidebar-browser

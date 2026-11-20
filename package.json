@@ -23,7 +23,7 @@
     "agent"
   ],
   "scripts": {
-    "postinstall": "patch-package && node scripts/install-brand-assets.mjs && install-electron --no",
+    "postinstall": "patch-package && node scripts/install-brand-assets.mjs && node scripts/write-3cool-runtime-seed.mjs && install-electron --no",
     "dev": "npm run office:prepare && npm run ppt:build && electron-vite dev",
     "build": "npm run office:prepare && npm run ppt:build && electron-vite build",
     "icons:generate": "node scripts/generate-app-icons.mjs",
@@ -41,6 +41,7 @@
     "package:mac:arm64": "node scripts/verify-target.mjs darwin arm64 && npm run build && electron-builder --mac --arm64 --publish never",
     "package:mac:x64": "node scripts/verify-target.mjs darwin x64 && npm run build && electron-builder --mac --x64 --publish never",
     "package:win": "node scripts/verify-target.mjs win32 x64 && npm run build && node scripts/electron-builder-windows.mjs --win --x64 --publish never",
+    "package:win:3cool": "node scripts/verify-target.mjs win32 x64 && npm run build && node scripts/write-3cool-runtime-seed.mjs && node scripts/electron-builder-windows.mjs --win --x64 --publish never --config electron-builder.3cool.cjs",
     "ppt:build": "node scripts/prepare-ppt-runtime.mjs",
     "pretest": "npm run office:prepare && npm run ppt:build",
     "pretest:watch": "npm run office:prepare && npm run ppt:build",
@@ -319,8 +320,8 @@
     "koffi": "3.1.5"
   },
   "build": {
-    "appId": "io.dsh.desktop",
-    "productName": "DSH Desktop",
+    "appId": "cc.3cool.desktop",
+    "productName": "3COOL",
     "asar": true,
     "asarUnpack": [
       "**/*.{node,dylib,dll,so,exe}",
@@ -447,6 +448,22 @@
         "to": "startup-whale.gif"
       },
       {
+        "from": "build/startup-3cool.png",
+        "to": "startup-3cool.png"
+      },
+      {
+        "from": "build/mark-3cool.png",
+        "to": "mark-3cool.png"
+      },
+      {
+        "from": "build/logo-3cool-dark.png",
+        "to": "logo-3cool-dark.png"
+      },
+      {
+        "from": "build/3cool-runtime.env",
+        "to": "3cool-runtime.env"
+      },
+      {
         "from": "build/dsh-loader.gif",
         "to": "dsh-loader.gif"
       },
@@ -483,14 +500,9 @@
         "to": "office-cli.mjs"
       }
     ],
-    "publish": [
-      {
-        "provider": "generic",
-        "url": "https://dshdesktop.com/updates/latest/"
-      }
-    ],
+    "publish": null,
     "detectUpdateChannel": false,
-    "artifactName": "dsh-desktop-${os}-${arch}.${ext}",
+    "artifactName": "3cool-${os}-${arch}.${ext}",
     "mac": {
       "notarize": false,
       "category": "public.app-category.developer-tools",
@@ -533,7 +545,7 @@
     },
     "win": {
       "icon": "build/icon.ico",
-      "verifyUpdateCodeSignature": true,
+      "verifyUpdateCodeSignature": false,
       "signtoolOptions": {
         "publisherName": "Beijing Shuju Xiangsu Intelligence Technology Co., Ltd.",
         "signingHashAlgorithms": [
@@ -551,7 +563,7 @@
       ]
     },
     "nsis": {
-      "artifactName": "dsh-desktop-windows-${arch}-setup.${ext}",
+      "artifactName": "3cool-windows-${arch}-setup.${ext}",
       "include": "build/installer.nsh",
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,

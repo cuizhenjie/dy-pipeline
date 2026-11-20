@@ -46,7 +46,7 @@ describe('window restart prompt', () => {
     expect(vi.getTimerCount()).toBe(0)
     expect(options.show).toHaveBeenCalledWith({
       type: 'none', title: 'DSH Desktop',
-      message: 'Unable to display the window', detail: 'Please restart DSH Desktop to try again.',
+      message: 'Unable to display the window', detail: 'Please restart 3COOL to try again.',
       buttons: ['Restart'], defaultId: 0, cancelId: 0, noLink: true
     })
     expect(actions).toEqual(['restart', 'quit'])

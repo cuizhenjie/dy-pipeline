@@ -195,7 +195,7 @@ describe('GitHub release contract', () => {
       'utf8'
     )
 
-    expect(packageJson.build.artifactName).toBe('dsh-desktop-${os}-${arch}.${ext}')
+    expect(packageJson.build.artifactName).toBe('3cool-${os}-${arch}.${ext}')
     expect(packageJson.build.asar).toBe(true)
     // JavaScript stays in app.asar; only files the OS loads or executes unpack.
     expect(packageJson.build.asarUnpack).not.toContain('node_modules/**/*')
@@ -251,6 +251,18 @@ describe('GitHub release contract', () => {
       to: 'startup-whale.gif'
     })
     expect(packageJson.build.extraResources).toContainEqual({
+      from: 'build/startup-3cool.png',
+      to: 'startup-3cool.png'
+    })
+    expect(packageJson.build.extraResources).toContainEqual({
+      from: 'build/mark-3cool.png',
+      to: 'mark-3cool.png'
+    })
+    expect(packageJson.build.extraResources).toContainEqual({
+      from: 'build/3cool-runtime.env',
+      to: '3cool-runtime.env'
+    })
+    expect(packageJson.build.extraResources).toContainEqual({
       from: 'build/dsh-loader.gif',
       to: 'dsh-loader.gif'
     })
@@ -271,7 +283,7 @@ describe('GitHub release contract', () => {
       to: 'web-import.html'
     })
     expect(packageJson.build.nsis.artifactName).toBe(
-      'dsh-desktop-windows-${arch}-setup.${ext}'
+      '3cool-windows-${arch}-setup.${ext}'
     )
     expect(packageJson.build.nsis.include).toBe('build/installer.nsh')
     expect(packageJson.build.win.target).toEqual([{ target: 'nsis', arch: ['x64'] }])
@@ -296,7 +308,7 @@ describe('GitHub release contract', () => {
     ) as {
       dependencies: Record<string, string>
       build: {
-        publish: Array<{ provider: string; url?: string; owner?: string; repo?: string }>
+        publish: Array<{ provider: string; url?: string; owner?: string; repo?: string }> | null
         win: { verifyUpdateCodeSignature: boolean; signtoolOptions: { publisherName: string } }
       }
     }
@@ -306,10 +318,8 @@ describe('GitHub release contract', () => {
     )
 
     expect(packageJson.dependencies['electron-updater']).toBeTruthy()
-    expect(packageJson.build.publish).toEqual([
-      { provider: 'generic', url: 'https://dshdesktop.com/updates/latest/' }
-    ])
-    expect(packageJson.build.win.verifyUpdateCodeSignature).toBe(true)
+    expect(packageJson.build.publish).toBeNull()
+    expect(packageJson.build.win.verifyUpdateCodeSignature).toBe(false)
     expect(packageJson.build.win.signtoolOptions.publisherName).toBe('Beijing Shuju Xiangsu Intelligence Technology Co., Ltd.')
     for (const asset of [
       'latest-mac-arm64.yml',
@@ -378,12 +388,12 @@ describe('GitHub release contract', () => {
     expect(packageJson.scripts['package:dev:win']).toContain('verify-target.mjs win32 x64')
     expect(packageJson.scripts['package:dev:win']).toContain('electron-builder.dev.cjs')
     expect(packageJson.scripts['package:dev:win']).toContain('--publish never')
-    expect(developmentConfig.appId).toBe('io.dsh.desktop.dev')
-    expect(developmentConfig.productName).toBe('DSH Desktop Dev')
+    expect(developmentConfig.appId).toBe('cc.3cool.desktop.dev')
+    expect(developmentConfig.productName).toBe('3COOL Dev')
     expect(developmentConfig.directories.output).toBe('dist-dev')
     expect(developmentConfig.extraMetadata.dshDesktopChannel).toBe('development')
-    expect(developmentConfig.artifactName).toBe('dsh-desktop-dev-${os}-${arch}.${ext}')
-    expect(developmentConfig.nsis.artifactName).toBe('dsh-desktop-dev-windows-${arch}-setup.${ext}')
+    expect(developmentConfig.artifactName).toBe('3cool-dev-${os}-${arch}.${ext}')
+    expect(developmentConfig.nsis.artifactName).toBe('3cool-dev-windows-${arch}-setup.${ext}')
   })
 
   it('builds and publishes every supported platform', async () => {

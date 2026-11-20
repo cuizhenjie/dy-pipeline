@@ -364,7 +364,7 @@ export function buildSafeModeViewModel(options: {
   if (options.locale === 'zh') {
     return {
       locale: 'zh',
-      brand: 'DSH Desktop',
+      brand: '3COOL',
       badge: '安全模式',
       heading: '',
       summary: '当前处于安全模式，尚未恢复正常启动。可能由插件导致，可在此停用后重启验证；插件和数据都会保留。',
@@ -406,7 +406,7 @@ export function buildSafeModeViewModel(options: {
 
   return {
     locale: 'en',
-    brand: 'DSH Desktop',
+    brand: '3COOL',
     badge: 'Safe Mode',
     heading: '',
     summary: 'You are in Safe Mode; normal startup has not recovered. A plugin may be responsible. Disable it here, then restart to verify; plugin files and data are kept.',

@@ -4,13 +4,11 @@ export const BOOT_COVER_ID = 'dsh-desktop-boot-cover'
 export const BOOT_COVER_STYLE_ID = 'dsh-desktop-boot-cover-style'
 export const BOOT_COVER_STALL_MS = 20_000
 /** Same files splash.html loads, served by the desktop protocol so the Harness origin can paint them. */
-export const BOOT_COVER_MARK_URL = 'dsh-desktop://desktop/startup-whale.gif'
+export const BOOT_COVER_MARK_URL = 'dsh-desktop://desktop/startup-3cool.png'
 
-// The supplied GIF has an opaque background and an embedded caption. Match
-// splash.html in both themes rather than recoloring or duplicating that caption.
-const BACKGROUND = '#fbfbfb'
+const BACKGROUND = '#0b1114'
 const MARK_WIDTH_PX = 280
-const MARK_ASPECT_RATIO = '480 / 276'
+const MARK_ASPECT_RATIO = '266 / 40'
 
 export interface BootCoverOptions {
   document: Document
@@ -100,7 +98,7 @@ export function mountBootCover(href: string, options: BootCoverOptions): BootCov
     'inset:0',
     'z-index:2147483646',
     `background:${BACKGROUND}`,
-    'color:#17181a'
+    'color:#f3f4f6'
   ].join(';')
   const shadow = cover.attachShadow({ mode: 'open' })
   // Matches build/splash.html. The outer visibility rule cannot enter this
@@ -120,7 +118,7 @@ export function mountBootCover(href: string, options: BootCoverOptions): BootCov
       padding:32px;
       text-align:center;
     }
-    .markFrame { display:grid; place-items:center; width:100%; transform:translateY(-80px); }
+    .markFrame { display:grid; place-items:center; width:100%; transform:translateY(-40px); }
     .mark {
       grid-area:1 / 1;
       width:min(${MARK_WIDTH_PX}px, 100%);
@@ -146,16 +144,16 @@ export function mountBootCover(href: string, options: BootCoverOptions): BootCov
   mark.className = 'mark'
   mark.alt = ''
   mark.src = BOOT_COVER_MARK_URL
-  mark.width = 480
-  mark.height = 276
+  mark.width = 266
+  mark.height = 40
   markFrame.append(mark)
   const copy = doc.createElement('div')
   copy.className = 'startupCopy'
   const title = doc.createElement('h1')
   const status = doc.createElement('p')
   const starting = locale === 'zh'
-    ? { title: '正在启动 DSH Desktop', status: '首次启动可能需要一点时间。' }
-    : { title: 'Starting DSH Desktop', status: 'First launch may take a moment.' }
+    ? { title: '正在启动 3COOL', status: '首次启动可能需要一点时间。' }
+    : { title: 'Starting 3COOL', status: 'First launch may take a moment.' }
   const stalled = locale === 'zh'
     ? {
       title: '启动时间较长',

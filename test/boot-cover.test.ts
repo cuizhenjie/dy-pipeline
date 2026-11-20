@@ -91,10 +91,10 @@ describe('boot cover lifecycle', () => {
     expect(harness.doc.querySelectorAll(`#${BOOT_COVER_ID}`)).toHaveLength(1)
     expect(repeat).toBe(harness.cover)
     const shadow = first?.shadowRoot
-    expect(shadow?.querySelector('h1')?.textContent).toBe('Starting DSH Desktop')
+    expect(shadow?.querySelector('h1')?.textContent).toBe('Starting 3COOL')
     expect(shadow?.querySelector('img.mark')?.getAttribute('src')).toBe(BOOT_COVER_MARK_URL)
     expect(shadow?.querySelectorAll('img')).toHaveLength(1)
-    expect(BOOT_COVER_MARK_URL).toBe('dsh-desktop://desktop/startup-whale.gif')
+    expect(BOOT_COVER_MARK_URL).toBe('dsh-desktop://desktop/startup-3cool.png')
     expect(shadow?.querySelector('.markFrame')?.getAttribute('aria-hidden')).toBe('true')
 
     const desktop = document.implementation.createHTMLDocument()
@@ -116,7 +116,7 @@ describe('boot cover lifecycle', () => {
     })
     expect(doc.body).toBeNull()
     const painted = doc.getElementById(BOOT_COVER_ID)
-    expect(painted?.shadowRoot?.querySelector('h1')?.textContent).toBe('正在启动 DSH Desktop')
+    expect(painted?.shadowRoot?.querySelector('h1')?.textContent).toBe('正在启动 3COOL')
     expect(painted?.shadowRoot?.querySelector('img.mark')?.getAttribute('src')).toBe(BOOT_COVER_MARK_URL)
     expect(doc.getElementById(BOOT_COVER_STYLE_ID)?.textContent).toContain('body, body *')
 
@@ -137,7 +137,7 @@ describe('boot cover lifecycle', () => {
 
   it('uses the Chinese startup copy', () => {
     const { doc, cover } = mountHarnessCover({ locale: 'zh' })
-    expect(doc.getElementById(BOOT_COVER_ID)?.shadowRoot?.querySelector('h1')?.textContent).toBe('正在启动 DSH Desktop')
+    expect(doc.getElementById(BOOT_COVER_ID)?.shadowRoot?.querySelector('h1')?.textContent).toBe('正在启动 3COOL')
     cover?.dispose()
   })
 
@@ -145,14 +145,14 @@ describe('boot cover lifecycle', () => {
     const { doc, cover } = mountHarnessCover()
     const root = doc.getElementById(BOOT_COVER_ID)
     const css = root?.shadowRoot?.querySelector('style')?.textContent ?? ''
-    expect(root?.style.background).toBe('rgb(251, 251, 251)')
-    expect(css).toContain('aspect-ratio:480 / 276')
+    expect(root?.style.background).toBe('rgb(11, 17, 20)')
+    expect(css).toContain('aspect-ratio:266 / 40')
     expect(css).toContain('width:min(280px, 100%)')
-    expect(css).toContain('translateY(-80px)')
+    expect(css).toContain('translateY(-40px)')
     expect(css).not.toContain('pixelated')
     expect(css).not.toContain('brightness')
     expect(root?.hasAttribute('data-stalled')).toBe(false)
-    expect(root?.shadowRoot?.querySelector('.startupCopy h1')?.textContent).toBe('Starting DSH Desktop')
+    expect(root?.shadowRoot?.querySelector('.startupCopy h1')?.textContent).toBe('Starting 3COOL')
     cover?.dispose()
   })
 

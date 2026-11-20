@@ -17,6 +17,9 @@
 
 - id: agent-default-model
   disabled: false
+  config:
+    provider: minimax-cn
+    model: MiniMax-M3
 
 - insert:
     - id: dsh-desktop-client-ui
