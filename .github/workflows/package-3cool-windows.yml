@@ -14,9 +14,12 @@ permissions:
 jobs:
   windows:
     name: Build unsigned 3COOL Windows installer
-    runs-on: windows-latest
+    runs-on: windows-2022
     timeout-minutes: 180
     steps:
+      - name: Preserve shared asset fingerprints during checkout
+        shell: bash
+        run: git config --global core.autocrlf false
       - uses: actions/checkout@v4
         with:
           lfs: true
