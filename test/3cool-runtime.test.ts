@@ -30,6 +30,17 @@ describe('3COOL MiniMax CN runtime seed', () => {
     }
   })
 
+  it('keeps an existing MiniMax seed when the environment key is empty', async () => {
+    const dir = await mkdtemp(join(tmpdir(), '3cool-seed-keep-'))
+    try {
+      const seed = join(dir, '3cool-runtime.env')
+      await writeFile(seed, 'MINIMAX_CN_API_KEY=keep-me\n')
+      expect(load3coolRuntimeEnv(seed, {})).toEqual({ MINIMAX_CN_API_KEY: 'keep-me' })
+    } finally {
+      await rm(dir, { recursive: true, force: true })
+    }
+  })
+
   it('writes MiniMax CN credentials once and leaves an existing file alone', async () => {
     const dir = await mkdtemp(join(tmpdir(), '3cool-home-'))
     try {
