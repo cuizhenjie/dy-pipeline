@@ -8,8 +8,7 @@ on:
       - main
 
 permissions:
-  contents: read
-  actions: write
+  contents: write
 
 jobs:
   windows:
@@ -38,11 +37,22 @@ jobs:
           CSC_IDENTITY_AUTO_DISCOVERY: 'false'
           MINIMAX_CN_API_KEY: ${{ secrets.MINIMAX_CN_API_KEY }}
         run: npm run package:win:3cool
-      - uses: actions/upload-artifact@v4
-        with:
-          name: 3cool-windows-x64
-          path: |
-            dist-3cool/*.exe
-            dist-3cool/*.yml
-          if-no-files-found: error
-          retention-days: 14
+      - name: Publish installer release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          shopt -s nullglob
+          files=(dist-3cool/*.exe dist-3cool/*.yml dist-3cool/*.blockmap)
+          if [ ${#files[@]} -eq 0 ]; then
+            echo "No installer files in dist-3cool"
+            ls -la dist-3cool || true
+            exit 1
+          fi
+          ls -lh "${files[@]}"
+          tag="v0.12.1-3cool"
+          if gh release view "$tag" >/dev/null 2>&1; then
+            gh release upload "$tag" "${files[@]}" --clobber
+          else
+            gh release create "$tag" "${files[@]}" --title "3COOL Windows" --notes "Unsigned 3COOL Windows installer. MiniMax CN is seeded for first launch." --latest=false
+          fi
