@@ -42,3 +42,6 @@ docs/mobile-connection-latency.zh.md
 
 # Local design iterations; production artwork lives in build/dmg/.
 /docs/dmg-install-preview/
+
+# Local code graph index
+.codegraph/

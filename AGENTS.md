@@ -107,3 +107,13 @@ git diff --check
 - 涉及启动、IPC、UI、安装迁移、更新或打包，补充对应真实流程验收。Windows 路径/进程/安装行为必须有 Windows 验证；其他平台通过不能代替。
 - 发版遵循 release runbook 和目标原生构建脚本，不绕过 `verify-target`。PR 检查通过或本地打包成功不等于正式发布。
 - 交付写清改动、原因、实际运行的检查、未完成的验收与限制。不得把尚未执行的检查写成通过。
+
+## 5. 平台工程配置（Coze）
+
+本仓库所在平台的工程配置记录在根目录 `.coze`（单层结构，`[subprojects].path = ["."]`）：
+
+- `project_type = ""`：项目是 Electron 桌面应用（复用 Harness runtime 与 Web UI），不属于 web / miniprogram / app / backend 类型。
+- `preview_enable = "disabled"`：桌面应用无浏览器/宿主型预览链路，平台不提供常驻预览；不生成 `.preview`，也不配置 `[dev]`。
+- 无 `[deploy]`：electron-builder 产物（macOS / Windows 安装包）走 GitHub Release 发布，不由平台部署，不配置部署入口。
+- `sub_id = 175abf06` 为平台分配的稳定唯一标识，创建后不可修改；改名或迁移目录均不影响。
+- 仓库包管理为 npm（`package-lock.json`），与平台 `requires = ["nodejs-24"]` 对应；触达运行/构建时按第 4 节命令执行。
