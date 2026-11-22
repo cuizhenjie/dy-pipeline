@@ -1,0 +1,5 @@
+- insert:
+    - id: omni-marketing
+      name: dsh-workbench-omni-marketing
+      config:
+        root: !!js dshHomePath('omni-marketing')
